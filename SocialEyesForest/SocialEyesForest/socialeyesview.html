@@ -1,0 +1,104 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Social Eyes Forest | View</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+        html {
+            height: 100%;
+        }
+
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #map_canvas {
+            height: 100%;
+        }
+    </style>
+
+    <!--script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAVU7CxVxO40dsvLcUs0iTmWy_zASyBs9I&sensor=true&language=es&libraries=drawing"></script-->
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true&language=es&libraries=drawing"></script>
+
+    <script src="scripts/jquery-2.1.3.min.js"></script>
+    <script src="scripts/markerclusterer.js"></script>
+    <link href="content/map.css" rel="stylesheet" />
+    <!--<script src="~/scripts/jquery.signalR-2.2.0.min.js"></script>
+    <script src="~/signalr/hubs"></script>-->
+    <script type="text/javascript">
+        var _map, _markerCluster, _infowindow;
+        var _markers = [];
+
+        function onItemClick(event, marker) {
+            _map.setCenter(marker.position);
+            _map.setZoom(16);
+
+            var contentString = marker.data.Observaciones + "<br /><br /><hr />Coordinate: " + marker.data.Lat + ", " + marker.data.Lng;
+            _infowindow.setContent(contentString);
+            _infowindow.setPosition(marker.position);
+            _infowindow.open(_map)
+        }
+
+        function initialize() {
+            var mapOptions = {
+                center: new google.maps.LatLng(-14.0708054, -75.758853),
+                zoom: 14,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+
+            _map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+            _infowindow = new google.maps.InfoWindow();
+
+            var timestamp = new Date().getTime();
+            $.getJSON("/eventos/listar?_=" + timestamp, function (data) {
+                $.each(data, function (key, val) {
+                    var latLng = new google.maps.LatLng(val.Lat, val.Lng);
+                    var marker = new google.maps.Marker({ 'position': latLng, 'data': val });
+                    _markers.push(marker);
+
+                    google.maps.event.addListener(marker, 'click', function () {
+                        onItemClick(event, marker);
+                    });
+                });
+                _markerCluster = new MarkerClusterer(_map, _markers);
+            });
+        }
+
+        //$(function () {
+        //    // Declare a proxy to reference the hub.
+        //    var chat = $.connection.forestThreatsHub;
+        //    // Create a function that the hub can call to broadcast messages.
+        //    chat.client.broadcastForestThreat = function (forestThreat) {
+        //        var latLng = new google.maps.LatLng(forestThreat.Latitude, forestThreat.Longitude);
+        //        var marker = new google.maps.Marker({ 'position': latLng, 'data': forestThreat });
+        //        _markers.push(marker);
+
+        //        google.maps.event.addListener(marker, 'click', function () {
+        //            onItemClick(event, marker);
+        //        });
+        //        onItemClick(event, marker);
+
+        //        _markerCluster.addMarker(marker);
+        //    };
+        //    //// Get the user name and store it to prepend to messages.
+        //    //$('#displayname').val(prompt('Enter your name:', ''));
+        //    //// Set initial focus to message input box.
+        //    //$('#message').focus();
+        //    //// Start the connection.
+        //    $.connection.hub.start().done(function () {
+        //        //$('#sendmessage').click(function () {
+        //        //    // Call the Send method on the hub.
+        //        //    chat.server.send($('#displayname').val(), $('#message').val());
+        //        //    // Clear text box and reset focus for next comment.
+        //        //    $('#message').val('').focus();
+        //        //});
+        //    });
+        //});
+    </script>
+</head>
+<body onload="initialize()">
+    <div id="map_canvas"></div>
+</body>
+</html>
