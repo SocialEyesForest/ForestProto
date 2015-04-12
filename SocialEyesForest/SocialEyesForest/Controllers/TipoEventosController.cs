@@ -3,7 +3,10 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Description;
+using System.Web.Mvc;
+using SocialEyesForest.Common;
 using SocialEyesForest.Models;
+using Newtonsoft.Json;
 
 namespace SocialEyesForest.Controllers
 {
@@ -12,13 +15,18 @@ namespace SocialEyesForest.Controllers
         private GeoContext db = new GeoContext();
 
         // GET: api/TipoEventos
-        public IQueryable<TipoEvento> GetTipoEventos()
+        [System.Web.Mvc.Route("api/TipoEventos")]
+        [System.Web.Mvc.HttpGet]
+        public JsonNetResult GetTipoEventos()
         {
-            return db.TipoEventos;
+            var result = db.TipoEventos.Select(t => new {t.Id, t.Nombre}).ToList();
+            return new JsonNetResult { Data = result, Formatting = Formatting.None };
         }
 
         // GET: api/TipoEventos/5
-        [ResponseType(typeof(TipoEvento))]
+        [System.Web.Mvc.Route("api/TipoEvento/{id}")]
+        [System.Web.Mvc.HttpGet]
+        //[ResponseType(typeof(TipoEvento))]
         public IHttpActionResult GetTipoEvento(int id)
         {
             TipoEvento tipoEvento = db.TipoEventos.Find(id);
