@@ -172,6 +172,27 @@ namespace SocialEyesForest.Controllers
             return Json("Archivo guardado satisfactoriamente");
         }
 
+        public FileContentResult GetImagen(int id)
+        {
+            var ruta = Server.MapPath("App_Data/Images/" + "70bf44ce-6573-458f-bc6f-c2fd0a2cb35f.jpg");
+            return GetImage(FileToByteArray(ruta));
+        }
+
+        public FileContentResult GetImage(byte[] image)
+        {
+            if (image != null)
+                return new FileContentResult(image, "image/jpeg");
+            else
+            {
+                return null;
+            }
+        }
+
+        public byte[] FileToByteArray(string fileName)
+        {
+            return System.IO.File.ReadAllBytes(fileName);
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
