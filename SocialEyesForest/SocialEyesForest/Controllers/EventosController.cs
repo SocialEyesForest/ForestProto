@@ -174,7 +174,8 @@ namespace SocialEyesForest.Controllers
 
         public FileContentResult GetImagen(int id)
         {
-            var ruta = Server.MapPath("App_Data/Images/" + "70bf44ce-6573-458f-bc6f-c2fd0a2cb35f.jpg");
+            var media = db.Media.FirstOrDefault(t => t.IdEvento == id);
+            var ruta = Server.MapPath("~/App_Data/Images/" + media.NombreArchivo);
             return GetImage(FileToByteArray(ruta));
         }
 

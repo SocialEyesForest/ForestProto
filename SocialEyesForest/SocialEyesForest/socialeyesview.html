@@ -35,7 +35,7 @@
             _map.setCenter(marker.position);
             _map.setZoom(16);
 
-            var contentString = "<h3>" + marker.data.TipoEvento + "</h3>" + "<h4>" + marker.data.Motivo + "</h4>" + "<p>" + marker.data.Observaciones + "</p><hr />" + marker.data.FechaEvento;
+            var contentString = "<h3>" + marker.data.TipoEvento + "</h3>" + "<h4>" + marker.data.Motivo + "</h4>" + "<p>" + marker.data.Observaciones + "</p><br/><img alt='' height='100px' src='eventos/getImagen/" + marker.data.Id + "' /><hr />" + marker.data.FechaEvento;
             _infowindow.setContent(contentString);
             _infowindow.setPosition(marker.position);
             _infowindow.open(_map);
