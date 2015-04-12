@@ -1,4 +1,4 @@
-@charset "UTF-8";
+﻿@charset "UTF-8";
 @import url(font-awesome.min.css);
 @import url("http://fonts.googleapis.com/css?family=Open+Sans:400,400italic,600,600italic,800,800italic");
 
@@ -3314,6 +3314,7 @@
 /* Banner */
 
 	#banner {
+        background-image: url("../images/appweb.jpg");
 		display: -moz-flex;
 		display: -webkit-flex;
 		display: -ms-flex;
