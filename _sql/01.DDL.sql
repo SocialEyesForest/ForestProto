@@ -3,6 +3,7 @@ GO
 
 --
 /*
+DROP TABLE Media
 DROP TABLE Area;
 DROP TABLE Evento;
 DROP TABLE TipoEvento;
@@ -48,6 +49,9 @@ CONSTRAINT pk_Evento PRIMARY KEY CLUSTERED (Id ASC)
 );
 GO
 
+SELECT *,Localizacion.ToString() FROM Evento
+SELECT * FROM Media
+
 ALTER TABLE Evento 
 ADD CONSTRAINT FK_Evento_TipoEvento
 FOREIGN KEY (IdTipoEvento)
@@ -64,6 +68,7 @@ Id INT IDENTITY(1, 1) NOT NULL,
 IdEvento INT NOT NULL,
 NombreArchivo VARCHAR(255) NOT NULL,
 TipoMedia TINYINT NOT NULL,
+CONSTRAINT pk_Media PRIMARY KEY CLUSTERED (Id ASC)
 );
 GO
 ALTER TABLE Media

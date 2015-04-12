@@ -6,19 +6,18 @@ using SocialEyesForest.Models;
 
 namespace SocialEyesForest.Controllers
 {
-    public class TipoEventosController : Controller
+    public class MotivosController : Controller
     {
         private GeoContext db = new GeoContext();
-
         public JsonNetResult Listar()
         {
-            var result = db.TipoEventos.Select(t => new {k = t.Id, t = t.Nombre}).ToList();
+            var result = db.Motivos.Select(t => new { k = t.Id, t = t.Nombre }).ToList();
             return new JsonNetResult { Data = result, Formatting = Formatting.None };
         }
 
         public ActionResult Get(int id)
         {
-            var result = db.TipoEventos.Find(id);
+            var result = db.Motivos.Find(id);
             return new JsonNetResult { Data = result, Formatting = Formatting.None };
         }
         protected override void Dispose(bool disposing)
@@ -30,9 +29,9 @@ namespace SocialEyesForest.Controllers
             base.Dispose(disposing);
         }
 
-        private bool TipoEventoExists(int id)
+        private bool MotivosExists(int id)
         {
-            return db.TipoEventos.Count(e => e.Id == id) > 0;
+            return db.Motivos.Count(e => e.Id == id) > 0;
         }
     }
 }

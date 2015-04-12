@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Spatial;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Newtonsoft.Json;
@@ -13,6 +16,7 @@ namespace SocialEyesForest.Controllers
 {
     public class EventosController : Controller
     {
+        public const int SRID = 4326;
         private GeoContext db = new GeoContext();
 
         // GET: api/Eventos
@@ -38,7 +42,7 @@ namespace SocialEyesForest.Controllers
                 {
                     db.SaveChanges();
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (DbUpdateConcurrencyException)  // TODO: Manejar el error
                 {
                     if (!EventoExists(id))
                     {
@@ -54,13 +58,24 @@ namespace SocialEyesForest.Controllers
             return null;
         }
 
-        public ActionResult PostEvento(Evento evento)
+        public ActionResult Post(EventoDto eventoDto)
         {
             if (!ModelState.IsValid)
             {
                 //return BadRequest(ModelState);
-                return null;
+                return null; // TODO: Manejar el error
             }
+            var evento = new Evento
+            {
+                Id = eventoDto.Id,
+                FechaEvento = DateTime.Now, //eventoDto.FechaEvento,
+                Localizacion = DbGeography.FromText(string.Format("POINT({0} {1})", eventoDto.Lng, eventoDto.Lat), SRID),
+                Ubicacion = eventoDto.Ubicacion,
+                IdTipoEvento = eventoDto.IdTipoEvento,
+                IdMotivo = eventoDto.IdMotivo,
+                SubMotivo = eventoDto.SubMotivo,
+                Observaciones = eventoDto.Observaciones
+            };
             db.Eventos.Add(evento);
             db.SaveChanges();
             return new JsonNetResult { Data = evento, Formatting = Formatting.None };
@@ -72,12 +87,11 @@ namespace SocialEyesForest.Controllers
             if (file == null || file.ContentLength <= 0) return null; // TODO: Manejar el error
 
             var extension = Path.GetExtension(file.FileName);
-            var fileName = new Guid().ToString() + extension;
+            var fileName = Guid.NewGuid() + extension;
 
             var evento = db.Eventos.Find(id);
             if (evento == null) return null; // TODO: manejar error
             var media = db.Media.Create();
-            media.Id = id;
             media.IdEvento = id;
             media.NombreArchivo = fileName;
             switch (extension)
@@ -99,9 +113,48 @@ namespace SocialEyesForest.Controllers
             }
             db.SaveChanges();
 
-            var path = Path.Combine(Server.MapPath("~/App_Data/uploads"), fileName);
+            var path = Path.Combine(Server.MapPath("~/App_Data/Images"), fileName);
             file.SaveAs(path);
             return new JsonNetResult {Data = media, Formatting = Formatting.None};
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> PostImage(int id)
+        {
+            try
+            {
+                foreach (string file in Request.Files)
+                {
+                    Media media;
+                    var fileContent = Request.Files[file];
+                    if (fileContent != null && fileContent.ContentLength > 0)
+                    {
+                        var stream = fileContent.InputStream;
+                        var extension = Path.GetExtension(fileContent.FileName);
+                        var fileName = Guid.NewGuid().ToString() + extension;
+
+                        var evento = db.Eventos.Find(id);
+                        if (evento == null) return null; // TODO: manejar error
+                        media = new Media {IdEvento = id, NombreArchivo = fileName, TipoMedia = 1};
+                        db.Media.Add(media);
+
+                        //var fileName = Path.GetFileName(fileContent);
+                        var path = Path.Combine(Server.MapPath("~/App_Data/Images"), fileName);
+                        using (var fileStream = System.IO.File.Create(path))
+                        {
+                            stream.CopyTo(fileStream);
+                        }
+                        db.SaveChanges();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json("Proceso fallido");
+            }
+
+            return Json("Archivo guardado satisfactoriamente");
         }
 
         protected override void Dispose(bool disposing)

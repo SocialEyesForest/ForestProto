@@ -28,14 +28,9 @@
           <Property Name="SubMotivo" Type="varchar" MaxLength="255" />
           <Property Name="Observaciones" Type="varchar(max)" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'sitconsu_foresteye.sitconsu_foresteye.Media' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="Media">
           <Key>
             <PropertyRef Name="Id" />
-            <PropertyRef Name="IdEvento" />
-            <PropertyRef Name="NombreArchivo" />
-            <PropertyRef Name="TipoMedia" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="IdEvento" Type="int" Nullable="false" />
@@ -114,17 +109,10 @@ warning 6002: The table/view 'sitconsu_foresteye.sitconsu_foresteye.Media' does 
         <EntityContainer Name="GeoNamespaceStoreContainer">
           <EntitySet Name="Area" EntityType="Self.Area" Schema="sitconsu_foresteye" store:Type="Tables" />
           <EntitySet Name="Evento" EntityType="Self.Evento" Schema="sitconsu_foresteye" store:Type="Tables" />
+          <EntitySet Name="Media" EntityType="Self.Media" Schema="sitconsu_foresteye" store:Type="Tables" />
           <EntitySet Name="Motivo" EntityType="Self.Motivo" Schema="sitconsu_foresteye" store:Type="Tables" />
           <EntitySet Name="TipoArea" EntityType="Self.TipoArea" Schema="sitconsu_foresteye" store:Type="Tables" />
           <EntitySet Name="TipoEvento" EntityType="Self.TipoEvento" Schema="sitconsu_foresteye" store:Type="Tables" />
-          <EntitySet Name="Media" EntityType="Self.Media" store:Type="Tables" store:Schema="sitconsu_foresteye">
-            <DefiningQuery>SELECT 
-    [Media].[Id] AS [Id], 
-    [Media].[IdEvento] AS [IdEvento], 
-    [Media].[NombreArchivo] AS [NombreArchivo], 
-    [Media].[TipoMedia] AS [TipoMedia]
-    FROM [sitconsu_foresteye].[Media] AS [Media]</DefiningQuery>
-          </EntitySet>
           <AssociationSet Name="FK_Area_TipoArea" Association="Self.FK_Area_TipoArea">
             <End Role="TipoArea" EntitySet="TipoArea" />
             <End Role="Area" EntitySet="Area" />
@@ -260,9 +248,6 @@ warning 6002: The table/view 'sitconsu_foresteye.sitconsu_foresteye.Media' does 
         <EntityType Name="Media">
           <Key>
             <PropertyRef Name="Id" />
-            <PropertyRef Name="IdEvento" />
-            <PropertyRef Name="NombreArchivo" />
-            <PropertyRef Name="TipoMedia" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="IdEvento" Type="Int32" Nullable="false" />
