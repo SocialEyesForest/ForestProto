@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using SocialEyesForest.Common;
+using SocialEyesForest.Models;
+using System;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Spatial;
@@ -8,9 +11,6 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using Newtonsoft.Json;
-using SocialEyesForest.Common;
-using SocialEyesForest.Models;
 
 namespace SocialEyesForest.Controllers
 {
@@ -25,16 +25,18 @@ namespace SocialEyesForest.Controllers
             var result = db.Eventos.Select(t => new EventoDto
             {
                 Id = t.Id,
-                FechaEvento = t.FechaEvento,
-                Lat = t.Localizacion.Latitude??0,
-                Lng = t.Localizacion.Longitude??0,
-                Ubicacion = t.Ubicacion,
+                FechaEvento = t.FechaEvento.ToString(),
+                Lat = t.Localizacion.Latitude ?? 0,
+                Lng = t.Localizacion.Longitude ?? 0,
+                Ubicacion = t.Ubicacion ?? string.Empty,
                 IdTipoEvento = t.IdTipoEvento,
                 IdMotivo = t.IdMotivo,
                 SubMotivo = t.SubMotivo,
-                Observaciones = t.Observaciones
+                Observaciones = t.Observaciones ?? string.Empty,
+                Motivo = t.Motivo.Nombre ?? string.Empty,
+                TipoEvento = t.TipoEvento.Nombre ?? string.Empty
             }).ToList();
-            
+
             return new JsonNetResult { Data = result, Formatting = Formatting.None };
         }
 
@@ -64,7 +66,7 @@ namespace SocialEyesForest.Controllers
                         throw;
                     }
                 }
-                return new JsonNetResult {Data = evento, Formatting = Formatting.None};
+                return new JsonNetResult { Data = evento, Formatting = Formatting.None };
             }
             return null;
         }
@@ -113,11 +115,13 @@ namespace SocialEyesForest.Controllers
                 case ".bmp":
                     media.TipoMedia = 1;
                     break;
+
                 case ".avi":
                 case ".mov":
                 case ".3gp":
                     media.TipoMedia = 2;
                     break;
+
                 default:
                     media.TipoMedia = 0;
                     break;
@@ -126,7 +130,7 @@ namespace SocialEyesForest.Controllers
 
             var path = Path.Combine(Server.MapPath("~/App_Data/Images"), fileName);
             file.SaveAs(path);
-            return new JsonNetResult {Data = media, Formatting = Formatting.None};
+            return new JsonNetResult { Data = media, Formatting = Formatting.None };
         }
 
         [HttpPost]
@@ -146,7 +150,7 @@ namespace SocialEyesForest.Controllers
 
                         var evento = db.Eventos.Find(id);
                         if (evento == null) return null; // TODO: manejar error
-                        media = new Media {IdEvento = id, NombreArchivo = fileName, TipoMedia = 1};
+                        media = new Media { IdEvento = id, NombreArchivo = fileName, TipoMedia = 1 };
                         db.Media.Add(media);
 
                         //var fileName = Path.GetFileName(fileContent);
