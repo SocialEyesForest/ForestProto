@@ -24,8 +24,7 @@
 
     <script src="scripts/jquery-2.1.3.min.js"></script>
     <script src="scripts/markerclusterer.js"></script>
-    <!--<script src="scripts/map.js"></script>-->
-    <link href="content/map.css" rel="stylesheet" />
+    <link href="content/css/map.css" rel="stylesheet" />
     <!--<script src="~/scripts/jquery.signalR-2.2.0.min.js"></script>
     <script src="~/signalr/hubs"></script>-->
     <script type="text/javascript">
@@ -39,7 +38,7 @@
             var contentString = "<h3>" + marker.data.TipoEvento + "</h3>" + "<h4>" + marker.data.Motivo + "</h4>" + "<p>" + marker.data.Observaciones + "</p><hr />" + marker.data.FechaEvento;
             _infowindow.setContent(contentString);
             _infowindow.setPosition(marker.position);
-            _infowindow.open(_map)
+            _infowindow.open(_map);
         }
 
         function initialize() {
