@@ -63,7 +63,7 @@ function initModule() {
     var drawingManager = new window.google.maps.drawing.DrawingManager({
         drawingControlOptions: {
             drawingModes: [
-                window.google.maps.drawing.OverlayType.POLYGON,
+                //window.google.maps.drawing.OverlayType.POLYGON,
                 window.google.maps.drawing.OverlayType.MARKER
             ]
         },

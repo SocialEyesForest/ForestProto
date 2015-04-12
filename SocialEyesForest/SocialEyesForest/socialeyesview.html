@@ -44,16 +44,16 @@
 
         function initialize() {
             var mapOptions = {
-                center: new google.maps.LatLng(-14.0708054, -75.758853),
-                zoom: 14,
-                mapTypeId: google.maps.MapTypeId.ROADMAP
+                center: new google.maps.LatLng(-12, -65),
+                zoom: 7,
+                mapTypeId: google.maps.MapTypeId.HYBRID
             };
 
             _map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
             _infowindow = new google.maps.InfoWindow();
 
             var timestamp = new Date().getTime();
-            $.getJSON("/eventos/listar?_=" + timestamp, function (data) {
+            $.getJSON("eventos/listar?_=" + timestamp, function (data) {
                 $.each(data, function (key, val) {
                     var latLng = new google.maps.LatLng(val.Lat, val.Lng);
                     var marker = new google.maps.Marker({ 'position': latLng, 'data': val });

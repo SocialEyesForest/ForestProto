@@ -5,8 +5,8 @@ function initialize() {
     var canvas = document.getElementById("map-canvas");
     var mapOptions = {
         zoom: 7,
-        center: new window.google.maps.LatLng(-12, -65),
-        mapTypeId: window.google.maps.MapTypeId.SATELLITE,
+        center: new window.google.maps.LatLng(-12, -70),
+        mapTypeId: window.google.maps.MapTypeId.HYBRID,
         // controles adicionales
         streetViewControl: true,
         panControl: false,
