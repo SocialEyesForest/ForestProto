@@ -22,11 +22,22 @@ namespace SocialEyesForest.Controllers
         // GET: api/Eventos
         public ActionResult Listar()
         {
-            var result = db.Eventos.ToList();
+            var result = db.Eventos.Select(t => new EventoDto
+            {
+                Id = t.Id,
+                FechaEvento = t.FechaEvento,
+                Lat = t.Localizacion.Latitude??0,
+                Lng = t.Localizacion.Longitude??0,
+                Ubicacion = t.Ubicacion,
+                IdTipoEvento = t.IdTipoEvento,
+                IdMotivo = t.IdMotivo,
+                SubMotivo = t.SubMotivo,
+                Observaciones = t.Observaciones
+            }).ToList();
+            
             return new JsonNetResult { Data = result, Formatting = Formatting.None };
         }
 
-        // GET: api/Eventos/5
         public ActionResult GetEvento(int id)
         {
             var result = db.Eventos.Find(id);
