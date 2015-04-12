@@ -14,6 +14,11 @@ namespace SocialEyesForest.Models
     
     public partial class Evento
     {
+        public Evento()
+        {
+            this.Media = new HashSet<Media>();
+        }
+    
         public int Id { get; set; }
         public System.DateTime FechaEvento { get; set; }
         public System.Data.Entity.Spatial.DbGeography Localizacion { get; set; }
@@ -25,5 +30,6 @@ namespace SocialEyesForest.Models
     
         public virtual Motivo Motivo { get; set; }
         public virtual TipoEvento TipoEvento { get; set; }
+        public virtual ICollection<Media> Media { get; set; }
     }
 }

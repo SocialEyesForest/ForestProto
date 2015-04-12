@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="GeoNamespace.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="GeoNamespace.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Area">
           <Key>
             <PropertyRef Name="Id" />
@@ -27,6 +27,20 @@
           <Property Name="IdMotivo" Type="int" Nullable="false" />
           <Property Name="SubMotivo" Type="varchar" MaxLength="255" />
           <Property Name="Observaciones" Type="varchar(max)" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'sitconsu_foresteye.sitconsu_foresteye.Media' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Media">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="IdEvento" />
+            <PropertyRef Name="NombreArchivo" />
+            <PropertyRef Name="TipoMedia" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdEvento" Type="int" Nullable="false" />
+          <Property Name="NombreArchivo" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="TipoMedia" Type="tinyint" Nullable="false" />
         </EntityType>
         <EntityType Name="Motivo">
           <Key>
@@ -85,12 +99,32 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Media_Evento">
+          <End Role="Evento" Type="Self.Evento" Multiplicity="1" />
+          <End Role="Media" Type="Self.Media" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Evento">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Media">
+              <PropertyRef Name="IdEvento" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="GeoNamespaceStoreContainer">
           <EntitySet Name="Area" EntityType="Self.Area" Schema="sitconsu_foresteye" store:Type="Tables" />
           <EntitySet Name="Evento" EntityType="Self.Evento" Schema="sitconsu_foresteye" store:Type="Tables" />
           <EntitySet Name="Motivo" EntityType="Self.Motivo" Schema="sitconsu_foresteye" store:Type="Tables" />
           <EntitySet Name="TipoArea" EntityType="Self.TipoArea" Schema="sitconsu_foresteye" store:Type="Tables" />
           <EntitySet Name="TipoEvento" EntityType="Self.TipoEvento" Schema="sitconsu_foresteye" store:Type="Tables" />
+          <EntitySet Name="Media" EntityType="Self.Media" store:Type="Tables" store:Schema="sitconsu_foresteye">
+            <DefiningQuery>SELECT 
+    [Media].[Id] AS [Id], 
+    [Media].[IdEvento] AS [IdEvento], 
+    [Media].[NombreArchivo] AS [NombreArchivo], 
+    [Media].[TipoMedia] AS [TipoMedia]
+    FROM [sitconsu_foresteye].[Media] AS [Media]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="FK_Area_TipoArea" Association="Self.FK_Area_TipoArea">
             <End Role="TipoArea" EntitySet="TipoArea" />
             <End Role="Area" EntitySet="Area" />
@@ -103,9 +137,12 @@
             <End Role="TipoEvento" EntitySet="TipoEvento" />
             <End Role="Evento" EntitySet="Evento" />
           </AssociationSet>
+          <AssociationSet Name="FK_Media_Evento" Association="Self.FK_Media_Evento">
+            <End Role="Evento" EntitySet="Evento" />
+            <End Role="Media" EntitySet="Media" />
+          </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="GeoNamespace" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -134,6 +171,7 @@
           <Property Name="Observaciones" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Motivo" Relationship="Self.FK_Evento_Motivo" FromRole="Evento" ToRole="Motivo" />
           <NavigationProperty Name="TipoEvento" Relationship="Self.FK_Evento_TipoEvento" FromRole="Evento" ToRole="TipoEvento" />
+          <NavigationProperty Name="Media" Relationship="GeoNamespace.FK_Media_Evento" FromRole="Evento" ToRole="Medium" />
         </EntityType>
         <EntityType Name="Motivo">
           <Key>
@@ -213,7 +251,37 @@
             <End Role="TipoEvento" EntitySet="TipoEventos" />
             <End Role="Evento" EntitySet="Eventos" />
           </AssociationSet>
+          <EntitySet Name="Media" EntityType="GeoNamespace.Media" />
+          <AssociationSet Name="FK_Media_Evento" Association="GeoNamespace.FK_Media_Evento">
+            <End Role="Evento" EntitySet="Eventos" />
+            <End Role="Medium" EntitySet="Media" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="Media">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="IdEvento" />
+            <PropertyRef Name="NombreArchivo" />
+            <PropertyRef Name="TipoMedia" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdEvento" Type="Int32" Nullable="false" />
+          <Property Name="NombreArchivo" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="TipoMedia" Type="Byte" Nullable="false" />
+          <NavigationProperty Name="Evento" Relationship="GeoNamespace.FK_Media_Evento" FromRole="Medium" ToRole="Evento" />
+        </EntityType>
+        <Association Name="FK_Media_Evento">
+          <End Type="GeoNamespace.Evento" Role="Evento" Multiplicity="1" />
+          <End Type="GeoNamespace.Media" Role="Medium" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Evento">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Medium">
+              <PropertyRef Name="IdEvento" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -266,6 +334,16 @@
               <MappingFragment StoreEntitySet="TipoEvento">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Media">
+            <EntityTypeMapping TypeName="GeoNamespace.Media">
+              <MappingFragment StoreEntitySet="Media">
+                <ScalarProperty Name="TipoMedia" ColumnName="TipoMedia" />
+                <ScalarProperty Name="NombreArchivo" ColumnName="NombreArchivo" />
+                <ScalarProperty Name="IdEvento" ColumnName="IdEvento" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

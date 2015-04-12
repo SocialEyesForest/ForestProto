@@ -1,41 +1,32 @@
-﻿using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using System.Linq;
-using System.Web.Http;
-using System.Web.Http.Description;
+﻿using System.Linq;
 using System.Web.Mvc;
+using Newtonsoft.Json;
 using SocialEyesForest.Common;
 using SocialEyesForest.Models;
-using Newtonsoft.Json;
 
 namespace SocialEyesForest.Controllers
 {
-    public class TipoEventosController : ApiController
+    public class TipoEventosController : Controller
     {
         private GeoContext db = new GeoContext();
 
         // GET: api/TipoEventos
-        [System.Web.Mvc.Route("api/TipoEventos")]
-        [System.Web.Mvc.HttpGet]
-        public JsonNetResult GetTipoEventos()
+        //[System.Web.Mvc.Route("api/TipoEventos")]
+        //[System.Web.Mvc.HttpGet]
+        public JsonNetResult Listar()
         {
             var result = db.TipoEventos.Select(t => new {t.Id, t.Nombre}).ToList();
             return new JsonNetResult { Data = result, Formatting = Formatting.None };
         }
 
         // GET: api/TipoEventos/5
-        [System.Web.Mvc.Route("api/TipoEvento/{id}")]
-        [System.Web.Mvc.HttpGet]
+        //[System.Web.Mvc.Route("api/TipoEvento/{id}")]
+        //[System.Web.Mvc.HttpGet]
         //[ResponseType(typeof(TipoEvento))]
-        public IHttpActionResult GetTipoEvento(int id)
+        public ActionResult Get(int id)
         {
-            TipoEvento tipoEvento = db.TipoEventos.Find(id);
-            if (tipoEvento == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(tipoEvento);
+            var result = db.TipoEventos.Find(id);
+            return new JsonNetResult { Data = result, Formatting = Formatting.None };
         }
         /*
         // PUT: api/TipoEventos/5

@@ -13,6 +13,8 @@
         <AssociationConnector Association="GeoNamespace.FK_Area_TipoArea" ManuallyRouted="false" />
         <AssociationConnector Association="GeoNamespace.FK_Evento_Motivo" ManuallyRouted="false" />
         <AssociationConnector Association="GeoNamespace.FK_Evento_TipoEvento" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="GeoNamespace.Media" Width="1.5" PointX="5.25" PointY="0.75" />
+        <AssociationConnector Association="GeoNamespace.FK_Media_Evento" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

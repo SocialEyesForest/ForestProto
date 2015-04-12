@@ -254,6 +254,9 @@
       <DependentUpon>GeoContext.edmx</DependentUpon>
     </Compile>
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\Media.cs">
+      <DependentUpon>GeoContext.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Motivo.cs">
       <DependentUpon>GeoContext.tt</DependentUpon>
     </Compile>
@@ -354,7 +357,7 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
+    <Folder Include="App_Data\uploads\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

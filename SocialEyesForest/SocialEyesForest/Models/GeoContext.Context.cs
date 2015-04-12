@@ -30,5 +30,6 @@ namespace SocialEyesForest.Models
         public virtual DbSet<Motivo> Motivos { get; set; }
         public virtual DbSet<TipoArea> TipoAreas { get; set; }
         public virtual DbSet<TipoEvento> TipoEventos { get; set; }
+        public virtual DbSet<Media> Media { get; set; }
     }
 }
