@@ -4,9 +4,9 @@ var selectedShape;
 function initialize() {
     var canvas = document.getElementById("map-canvas");
     var mapOptions = {
-        zoom: 16,
-        center: new window.google.maps.LatLng(-12.100757399999999, -77.0275498),
-        mapTypeId: window.google.maps.MapTypeId.ROADMAP,
+        zoom: 7,
+        center: new window.google.maps.LatLng(-12, -65),
+        mapTypeId: window.google.maps.MapTypeId.SATELLITE,
         // controles adicionales
         streetViewControl: true,
         panControl: false,
